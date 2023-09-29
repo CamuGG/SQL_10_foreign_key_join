@@ -1,0 +1,81 @@
+1. Using the INGREDIENT and MEAL tables, write a query to return the name of all meals that contain garlic.
+
+#così avro anche i doppioni, se inserisco DISTINCT es. ' SELECT DISTINCT M.name ' non avrò doppioni
+
+SELECT M.name
+FROM MEAL M 
+JOIN INGREDIENT I ON M.meal_id = I.meal_id
+WHERE I.name = 'garlic';
+
+
+2. Using the INGREDIENT and MEAL tables, write a query to return the number of meals with vegetarian ingredients.
+
+SELECT COUNT(M.meal_id) AS count_meal_vegetarians
+FROM MEAL M
+JOIN INGREDIENT I ON M.meal_id = I.meal_id
+
+
+3. Using the INGREDIENT and MEAL tables, write a query to return the names of meals that have at least 1 gluten free ingredient and at least 1 vegan ingredient.
+
+SELECT M.name
+FROM MEAL M
+JOIN INGREDIENT I ON M.meal_id = I.meal_id
+WHERE I.gluten_free = 1 AND I.vegan = 1;
+
+
+4. Using the INGREDIENT and MEAL tables, write a query to return the average number of ingredients per meal.
+
+SELECT AVG(ingredient) AS avg_ingredient
+FROM ( 
+	SELECT M.meal_id, COUNT(I.ingredient_id) AS ingredient_count
+	FROM MEAL M 
+	JOIN INGREDIENT I ON M.meal_id = I.meal_id
+	GROUP BY M.meal_id
+) AS ingredient;
+
+
+5. Using the INGREDIENT and MEAL tables, write a query to return the names of meals that have more than 3 ingredients.
+
+SELECT M.name
+FROM MEAL M
+JOIN(
+	SELECT meal_id, COUNT(ingredient_id) AS ingredient_count
+	FROM ingredient
+	GROUP BY meal_id
+) AS ingredient_counts ON M.meal_id = ingredient_counts.meal_id
+WHERE ingredient_counts.ingredient_count > 3;
+
+
+6. Using the following table definitions, write an inner join for the two tables
+CREATE TABLE CUSTOMER (
+    CUSTOMER_ID INT,
+    NAME VARCHAR(255),
+    ADDRESS VARCHAR(255)
+);
+CREATE TABLE ORDER (
+    ORDER_ID INT,
+    CUSTOMER_ID INT,
+    ORDER_DATE DATE,
+    TOTAL_COST DECIMAL(10,2)
+);
+
+SELECT C.NAME AS customer_name
+FROM CUSTOMER C 
+JOIN ORDER O ON C.CUSTOMER_ID = O.CUSTOMER_ID;
+
+
+7. Using the following table definitions, write an inner join for the two tables
+CREATE TABLE PRODUCT (
+    PRODUCT_ID INT,
+    NAME VARCHAR(255),
+    PRICE DECIMAL(10,2)
+);
+CREATE TABLE INVENTORY (
+    PRODUCT_ID INT,
+    STORE_ID INT,
+    QUANTITY INT
+);
+
+SELECT P.NAME AS product_name
+FROM PRODUCT P
+JOIN INVENTORY I ON P.PRODUCT_ID = I.PRODUCT_ID;
